@@ -1,0 +1,195 @@
+# ReactDOM.render Usage Patterns for React 19 Migration
+
+## Summary
+
+React 19 deprecates `ReactDOM.render` from `react-dom` in favor of `createRoot` from
+`react-dom/client`. This document catalogs all entry point files that use `ReactDOM.render`
+and need to be migrated.
+
+---
+
+## Fork Status Summary
+
+| Package | Files | Fork Path | Source in uv.lock | Action Required |
+|---------|-------|-----------|-------------------|-----------------|
+| invenio-administration | 3 | `$WORKSPACE_ROOT/invenio-administration` | PyPI | Clone & activate in uv.lock |
+| invenio-app-rdm | 6 | `$WORKSPACE_ROOT/invenio-app-rdm` | PyPI | Clone & activate in uv.lock |
+| invenio-communities | 11 | `$WORKSPACE_ROOT/invenio-communities` | PyPI | Clone & activate in uv.lock |
+| invenio-jobs | 2 | `$WORKSPACE_ROOT/invenio-jobs` | PyPI | Clone & activate in uv.lock |
+| invenio-rdm-records | 1 | `$WORKSPACE_ROOT/invenio-rdm-records` | Editable | Ready to migrate |
+| invenio-search-ui | 1 | `$WORKSPACE_ROOT/invenio-search-ui` | PyPI | Clone & activate in uv.lock |
+
+**TOTAL: 24 entry points need migration**
+
+---
+
+## Fork Classification
+
+### 1. Active Forks (Editable in uv.lock)
+- invenio-rdm-records: `source = { editable = "../../oarepo/invenio-rdm-records" }`
+
+### 2. Existing Forks (Not Activated)
+All of these fork exist at https://github.com/oarepo/<name> and need to be activated in uv.lock:
+- invenio-administration
+- invenio-app-rdm
+- invenio-communities
+- invenio-jobs
+- invenio-search-ui
+
+### 3. Integration Plugins
+- invenio-requests: Integrated via `oarepo/oarepo-model-builder-requests` plugin
+
+---
+
+## Action Items
+
+1. **Clone missing forks** (if doing full migration):
+   ```bash
+   cd $WORKSPACE_ROOT
+   # Clone invenio-jobs fork from upstream
+   # Clone invenio-requests/oarepo-requests fork from upstream
+   ```
+
+2. **Activate existing forks** in uv.lock (to make migrations effective):
+   ```bash
+   cd $WORKSPACE_ROOT/invenio-dev-latest
+   # Install local forked packages using invenio-cli
+   uv run invenio-cli packages install \
+     "$WORKSPACE_ROOT/invenio-app-rdm" \
+     "$WORKSPACE_ROOT/invenio-administration" \
+     "$WORKSPACE_ROOT/invenio-communities" \
+     "$WORKSPACE_ROOT/invenio-search-ui"
+   ```
+
+3. **Migrate entry points** to createRoot (see migration pattern below)
+
+---
+
+## Migration Pattern
+
+**Before (React 16):**
+```javascript
+import ReactDOM from 'react-dom';
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('app')
+);
+```
+
+**After (React 19):**
+```javascript
+import { createRoot } from 'react-dom/client';
+
+const rootElement = document.getElementById('app');
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(<App />);
+} else {
+  console.error('Root element #app not found');
+}
+```
+
+---
+
+## Entry Points Detail
+
+### invenio-rdm-records (1 file) - READY TO MIGRATE
+
+**File**: `invenio_rdm_records/resources/DepositRecordSerializer.js`
+- Fork path: `$WORKSPACE_ROOT/invenio-rdm-records/invenio_rdm_records/resources/DepositRecordSerializer.js`
+
+### invenio-app-rdm (6 files)
+
+1. **theme.js** - Main application theme
+   - Installed: `invenio_app_rdm/theme/theme.js`
+   - Fork path: `$WORKSPACE_ROOT/invenio-app-rdm/invenio_app_rdm/theme/assets/semantic-ui/js/invenio_app_rdm/theme.js`
+   - Container: `#invenio-app-rdm`
+   - Uses: OverridableContext
+
+2. **landing-page.js**
+   - Installed: `invenio_app_rdm/landing/landing-page.js`
+   - Fork path: `$WORKSPACE_ROOT/invenio-app-rdm/invenio_app_rdm/theme/assets/semantic-ui/js/invenio_app_rdm/landing/landing-page.js`
+   - Container: `#landing-page`
+   - Special: Conditional rendering (if element exists)
+
+3. **dashboard.js**
+   - Uses: parametrize, dataset extraction
+
+4. **user-dashboard-profile.js**
+   - Component: CommunityProfileForm
+
+5. **user-dashboard-submissions.js**
+   - Component: CommunitySubmissionPolicyForm
+
+6. **user-dashboard-records.js**
+
+### invenio-communities (11 files)
+
+1. **frontpage.js**
+   - Fork path: `$WORKSPACE_ROOT/invenio-communities/invenio_communities/assets/semantic-ui/js/invenio_communities/community/frontpage.js`
+   - Container: `#invenio-administration-details-root`
+
+2. **featuredCommunities/index.js**
+   - Fork path: `$WORKSPACE_ROOT/invenio-communities/invenio_communities/assets/semantic-ui/js/invenio_communities/community/featuredCommunities/index.js`
+   - Container: `#featured-community-index`
+
+3. **featuredCommunities/select.js**
+
+4. **new.js** (subcommunity)
+   - Installed: `invenio_communities/subcommunity/new.js`
+
+5. **invite.js**
+
+6. **requests.js**
+
+7. **search.js**
+
+8. **subcommunity/new.js**
+
+9. **subcommunity/settings.js**
+
+10. **community/frontpage.js**
+
+11. **communities/frontpage.js**
+
+### invenio-administration (3 files)
+
+1. **app.js** - Main admin app
+
+2. **theme.js** - Admin theme
+
+3. **details.js** - Details view
+
+### file-management-dialog (1 file)
+
+1. **index.js** - File upload dialog
+   - Uses: OverridableContext
+
+### invenio-jobs (2 files)
+
+1. **JobDetailsView.js**
+   - Fork path: `$WORKSPACE_ROOT/invenio-jobs/invenio_jobs/assets/semantic-ui/js/invenio_jobs/views/JobDetailsView.js`
+   - Container: `#job-details-view`
+
+2. **RunsLogsView.js**
+   - Fork path: `$WORKSPACE_ROOT/invenio-jobs/invenio_jobs/assets/semantic-ui/js/invenio_jobs/views/RunsLogsView.js`
+   - Container: `#runs-logs-config`
+   - Uses: OverridableContext
+
+**Note**: oarepo fork exists at https://github.com/oarepo/invenio-jobs
+
+### invenio-requests
+
+Integrated via `oarepo/oarepo-model-builder-requests` plugin - no direct fork needed for React entry points.
+
+### invenio-search-ui (1 file)
+
+1. **util.js**
+   - Fork path: `$WORKSPACE_ROOT/invenio-search-ui/invenio_search_ui/ui/components/util.js`
+
+---
+
+Generated: 2026-02-05
+React Version: 19.2.4
+Analysis Source: uv.lock (package dependency truth)

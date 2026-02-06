@@ -1,0 +1,255 @@
+{
+  "analysis_date": "2026-02-05",
+  "inveniosoftware_repos_with_react": [
+    {
+      "name": "react-searchkit",
+      "full_name": "inveniosoftware/react-searchkit",
+      "description": "React component library to build search interfaces",
+      "language": "JavaScript",
+      "stars": 81,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/react-searchkit",
+      "oarepo_fork_url": "https://github.com/oarepo/react-searchkit",
+      "url": "https://github.com/inveniosoftware/react-searchkit",
+      "react_version_in_peer_deps": "^16.13.0"
+    },
+    {
+      "name": "react-invenio-forms",
+      "full_name": "inveniosoftware/react-invenio-forms",
+      "description": "React component library for Formik components",
+      "language": "JavaScript",
+      "stars": 1,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/react-invenio-forms",
+      "oarepo_fork_url": "https://github.com/oarepo/react-invenio-forms",
+      "url": "https://github.com/inveniosoftware/react-invenio-forms",
+      "react_version_in_peer_deps": "^16.13.0"
+    },
+    {
+      "name": "react-invenio-deposit",
+      "full_name": "inveniosoftware/react-invenio-deposit",
+      "description": "React application for Invenio deposit forms",
+      "language": "JavaScript",
+      "stars": 4,
+      "archived": true,
+      "has_oarepo_fork": false,
+      "url": "https://github.com/inveniosoftware/react-invenio-deposit",
+      "react_version_in_peer_deps": "^16.13.0"
+    },
+    {
+      "name": "react-invenio-app-ils",
+      "full_name": "inveniosoftware/react-invenio-app-ils",
+      "description": "Single Page App built with React for InvenioILS",
+      "language": "JavaScript",
+      "stars": 5,
+      "archived": false,
+      "has_oarepo_fork": false,
+      "url": "https://github.com/inveniosoftware/react-invenio-app-ils",
+      "react_version_in_peer_deps": "^16.13.1"
+    },
+    {
+      "name": "invenio-search-ui",
+      "full_name": "inveniosoftware/invenio-search-ui",
+      "description": "UI for Invenio Search",
+      "language": "JavaScript",
+      "stars": 5,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/invenio-search-ui",
+      "oarepo_fork_url": "https://github.com/oarepo/invenio-search-ui",
+      "url": "https://github.com/inveniosoftware/invenio-search-ui"
+    },
+    {
+      "name": "invenio-administration",
+      "full_name": "inveniosoftware/invenio-administration",
+      "description": "Invenio administration module",
+      "language": "JavaScript",
+      "stars": 0,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/invenio-administration",
+      "oarepo_fork_url": "https://github.com/oarepo/invenio-administration",
+      "url": "https://github.com/inveniosoftware/invenio-administration"
+    },
+    {
+      "name": "invenio-app-rdm",
+      "full_name": "inveniosoftware/invenio-app-rdm",
+      "description": "Turn-key research data management platform",
+      "language": "JavaScript",
+      "stars": 148,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/invenio-app-rdm",
+      "oarepo_fork_url": "https://github.com/oarepo/invenio-app-rdm",
+      "url": "https://github.com/inveniosoftware/invenio-app-rdm",
+      "note": "Contains assets with React code"
+    },
+    {
+      "name": "invenio-communities",
+      "full_name": "inveniosoftware/invenio-communities",
+      "description": "Invenio module for communities",
+      "language": "JavaScript",
+      "stars": 32,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/invenio-communities",
+      "oarepo_fork_url": "https://github.com/oarepo/invenio-communities",
+      "url": "https://github.com/inveniosoftware/invenio-communities",
+      "note": "Contains assets with React code"
+    },
+    {
+      "name": "invenio-jobs",
+      "full_name": "inveniosoftware/invenio-jobs",
+      "description": "Invenio module for job management",
+      "language": "JavaScript",
+      "stars": 3,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo/invenio-jobs",
+      "oarepo_fork_url": "https://github.com/oarepo/invenio-jobs",
+      "url": "https://github.com/inveniosoftware/invenio-jobs",
+      "note": "Contains assets with React code"
+    },
+    {
+      "name": "invenio-requests",
+      "full_name": "inveniosoftware/invenio-requests",
+      "description": "Invenio module for request management",
+      "language": "JavaScript",
+      "stars": 3,
+      "archived": false,
+      "has_oarepo_fork": true,
+      "oarepo_fork": "oarepo-model-builder-requests",
+      "oarepo_fork_url": "https://github.com/oarepo/oarepo-model-builder-requests",
+      "url": "https://github.com/inveniosoftware/invenio-requests",
+      "note": "Contains assets with React code; oarepo integration via model-builder-requests"
+    },
+    {
+      "name": "invenio-charts-js",
+      "full_name": "inveniosoftware/invenio-charts-js",
+      "description": "Invenio-Charts-JS library for charts (D3.js)",
+      "language": "JavaScript",
+      "stars": 1,
+      "archived": false,
+      "has_oarepo_fork": false,
+      "url": "https://github.com/inveniosoftware/invenio-charts-js"
+    }
+  ],
+  "oarepo_repos_with_react_or_js": [
+    {
+      "name": "invenio-app-rdm",
+      "full_name": "oarepo/invenio-app-rdm",
+      "description": "Turn-key research data management platform",
+      "language": "Python",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-app-rdm",
+      "note": "Fork of inveniosoftware/invenio-app-rdm"
+    },
+    {
+      "name": "invenio-administration",
+      "full_name": "oarepo/invenio-administration",
+      "description": "Invenio administration module",
+      "language": "Python",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-administration",
+      "note": "Fork of inveniosoftware/invenio-administration"
+    },
+    {
+      "name": "invenio-communities",
+      "full_name": "oarepo/invenio-communities",
+      "description": "Invenio module for communities",
+      "language": "Python",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-communities",
+      "note": "Fork of inveniosoftware/invenio-communities"
+    },
+    {
+      "name": "invenio-dev-latest",
+      "full_name": "oarepo/invenio-dev-latest",
+      "description": "Development instance of InvenioRDM latest, with RSpack & PNPM",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-dev-latest",
+      "note": "Fork of invenio-dev-latest; contains custom migration work"
+    },
+    {
+      "name": "invenio-files-uppy-js",
+      "full_name": "oarepo/invenio-files-uppy-js",
+      "description": "Uppy.io uploader integration for managing file uploads in Invenio deposit forms",
+      "language": "JavaScript",
+      "archived": true,
+      "url": "https://github.com/oarepo/invenio-files-uppy-js",
+      "note": "Fork of inveniosoftware/invenio-files-uppy-js"
+    },
+    {
+      "name": "invenio-jobs",
+      "full_name": "oarepo/invenio-jobs",
+      "description": "Invenio module for job management",
+      "language": "Python",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-jobs",
+      "note": "Fork of inveniosoftware/invenio-jobs"
+    },
+    {
+      "name": "invenio-react-migration",
+      "full_name": "oarepo/invenio-react-migration",
+      "description": "Universal React 19 migration tooling for InvenioRDM instances",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-react-migration",
+      "note": "Original oarepo repo, not a fork"
+    },
+    {
+      "name": "invenio-search-ui",
+      "full_name": "oarepo/invenio-search-ui",
+      "description": "UI for Invenio Search",
+      "language": "Python",
+      "archived": false,
+      "url": "https://github.com/oarepo/invenio-search-ui",
+      "note": "Fork of inveniosoftware/invenio-search-ui"
+    },
+    {
+      "name": "oarepo-model-builder-requests",
+      "full_name": "oarepo/oarepo-model-builder-requests",
+      "description": "Integration of invenio-requests into model builder",
+      "language": "Python",
+      "archived": false,
+      "url": "https://github.com/oarepo/oarepo-model-builder-requests",
+      "note": "Integration plugin for invenio-requests (not a direct fork)"
+    },
+    {
+      "name": "react-generative-ui",
+      "full_name": "oarepo/react-generative-ui",
+      "description": "Library for generation of user-configured UI views",
+      "language": "TypeScript",
+      "archived": true,
+      "url": "https://github.com/oarepo/react-generative-ui",
+      "note": "Original oarepo repo, not a fork"
+    },
+    {
+      "name": "react-invenio-forms",
+      "full_name": "oarepo/react-invenio-forms",
+      "description": "React component library for Formik components",
+      "language": "JavaScript",
+      "archived": false,
+      "url": "https://github.com/oarepo/react-invenio-forms",
+      "note": "Fork of inveniosoftware/react-invenio-forms"
+    },
+    {
+      "name": "react-searchkit",
+      "full_name": "oarepo/react-searchkit",
+      "description": "React component library to build search interfaces",
+      "language": "JavaScript",
+      "archived": false,
+      "url": "https://github.com/oarepo/react-searchkit",
+      "note": "Fork of inveniosoftware/react-searchkit"
+    }
+  ],
+  "missing_forks": [],
+  "summary": {
+    "total_inveniosoftware_unarchived_repos_with_react_or_js": 12,
+    "total_oarepo_forks_found": 8,
+    "total_oarepo_original_unarchived_repos": 2,
+    "total_oarepo_integration_plugins": 1,
+    "missing_forks_count": 0
+  }
+}
