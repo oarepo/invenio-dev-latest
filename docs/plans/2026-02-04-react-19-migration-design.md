@@ -3,7 +3,8 @@
 ## Document Information
 
 - **Created**: 2026-02-04
-- **Target**: React 19.2.4 (latest)
+- **Updated**: 2026-02-06
+- **Target**: React 19.2.4 (latest) **- BLOCKER: react-overridable max React 17**
 - **Scope**: Full codebase migration with full documentation
 - **Migration Strategy**: Phased conversion (Option C)
 - **Validated by**: frontend-design skill
@@ -284,23 +285,112 @@ fi
    - react-searchkit issue #211 (2022): "Support React 17" - still open
    - No active work on React 19 migration detected
 
-### Required New Migration Phase
+### CRITICAL BLOCKER: react-overridable peerDependency limitation
+
+**Issue**: `react-overridable` currently has peerDependency constraint `react: ">=16.14.0"` but the existing PR #14 only supports React 17.
+
+**Impact**:
+- All components using `react-overridable` wrapper (SearchKit, forms, deposit) require this package
+- Direct upgrade to React 19 is blocked by this constraint
+- Forking and updating `react-overridable` to support React 19 is required first
+
+**Dependency Chain**:
+```
+react-overridable (v1.2.0, max React 17)
+├── react-searchkit (depends on ^1.x)
+│   └── Used in: invenio-app-rdm, invenio-search-ui, react-invenio-deposit, etc.
+└── react-invenio-forms (depends on ^1.x)
+    └── Used in: invenio-administration, react-invenio-deposit, etc.
+```
+
+**Migration Path**:
+1. Migrate react-overridable to v2.0.0 with React 19 support
+2. Update react-searchkit to depend on react-overridable ^2.0.0, migrate to React 19
+3. Update react-invenio-forms to depend on react-overridable ^2.0.0, migrate to React 19
+4. Then migrate application forks
+
+**Reference**: https://github.com/indico/react-overridable/pull/14
+**Next Ecosystem Blocker Package**: `react-overridable` (must be migrated BEFORE react-searchkit and react-invenio-forms)
+
+### Required New Migration Phase (Updated)
 
 **Phase -1: Invenio Ecosystem Packages Migration (BEFORE any application migration)**
 
+**Phase 0: react-overridable** (NEW - Must be done first)
 ```
-1. Fork react-invenio-forms (inveniosoftware fork)
-2. Fork react-searchkit (inveniosoftware fork)
-3. Analyze codebase and create test coverage (>90%)
+1. Fork react-overridable (inveniosoftware fork)
+2. Analyze codebase and create test coverage (>90%)
+3. Update peerDependencies: `"react": ">=17.0.0"` (allow React 19)
+4. Update testing: replace deprecated enzyme adapters
+5. Write comprehensive tests
+6. Publish new version (v2.x for major version bump)
+```
+
+**Phase 1: react-searchkit** (Already started)
+```
+1. Fork react-searchkit (inveniosoftware fork) ✓ DONE
+2. Analyze codebase and create test coverage (>90%) ✓ DONE (693 tests)
+3. Update dependency: react-overridable to >=2.0.0
 4. Migrate to React 19:
    - Update dependencies (React 16 → 19)
    - ReactDOM.render → createRoot
    - Update any class components to hooks
    - Update PropTypes
 5. Write comprehensive tests
-6. Publish new versions (v5.x for major version bump)
-7. Wait for official inveniosoftware releases OR use forked versions
+6. Publish new version (v5.x for major version bump)
 ```
+
+### 2.2.1 react-overridable Migration Details
+
+**Repository**: https://github.com/inveniosoftware/react-overridable
+**Branch to Fork**: `master` (upstream)
+**Target Branch**: `contribution-react-19-migration`
+**Estimated Effort**: 2-3 days
+
+**Tasks**:
+1. Fork repository to oarepo organization
+2. Set up branch `contribution-react-19-migration`
+3. Create Jest testing infrastructure (if not present)
+4. Write tests to achieve >90% coverage (package is small, ~200 lines)
+5. Update `package.json`:
+   ```json
+   {
+     "peerDependencies": {
+       "@babel/runtime": "^7.9.0",
+       "prop-types": "^15.7.0",
+       "react": ">=17.0.0",
+       "react-dom": ">=17.0.0"
+     }
+   }
+   ```
+6. Update test adapters from enzyme to @testing-library/react (enzyme is dead)
+7. Verify all tests pass with React 19
+8. Publish v2.0.0 to npm (oarepo-react-overridable)
+9. Create PR to upstream (optional, low priority)
+
+**Verification**:
+```bash
+CI=true pnpm test -- --coverage  # Must have >90% coverage
+CI=true pnpm test -- --passWithNoTests  # Enforce passing tests
+pnpm build  # Must succeed
+```
+
+### 2.2.2 react-searchkit Migration Details (In Progress)
+
+**Phase 2: react-invenio-forms**
+```
+1. Fork react-invenio-forms (inveniosoftware fork)
+2. Analyze codebase and create test coverage (>90%)
+3. Update dependency: react-overridable to >=2.0.0
+4. Migrate to React 19:
+   - Update dependencies (React 16 → 19)
+   - ReactDOM.render → createRoot
+   - Update any class components to hooks
+   - Update PropTypes
+5. Write comprehensive tests
+6. Publish new version (v5.x for major version bump)
+```
+
 
 ### STOP PROCEED CONDITION (Updated)
 
@@ -309,7 +399,9 @@ fi
 - ✅ Forks have linter scripts (Phase 0 - DONE)
 - ✅ Forks have Jest infrastructure (Phase 0 - DONE)
 - ✅ Forks have run-js-tests.sh scripts (Phase 0 - DONE)
-- ❌ Ecosystem packages migrated to React 19 (**BLOCKER**)
+- ❌ react-overridable migrated to React 19 (**BLOCKER 0**)
+- ❌ react-searchkit migrated to React 19 (depends on react-overridable)
+- ❌ react-invenio-forms migrated to React 19 (depends on react-overridable)
 - ❌ Ecosystem packages published as new versions
 - ❌ Application forks updated to use new ecosystem package versions
 - ❌ Application fork tests pass with >90% coverage
@@ -336,6 +428,11 @@ This plan details the migration of the InvenioRDM codebase from React 16.13.0 to
 
 | Item | Current | Target | Latest Available |
 |------|---------|--------|------------------|
+| **Ecosystem Packages** | | | |
+| react-overridable | 1.2.0 (max React 17) | 2.0.0 (React 19) | BLOCKER |
+| react-searchkit | 4.0.0 | 5.0.0 (React 19) | In Progress |
+| react-invenio-forms | 4.0.0 | 5.0.0 (React 19) | TBD |
+| **Core Dependencies** | | | |
 | React Version | 16.13.0 | 19.2.4 | 19.2.4 |
 | React DOM | 16.13.0 | 19.2.4 | 19.2.4 |
 | React Router DOM | 6.3.0 | 7.13.0 | 7.13.0 |
@@ -350,6 +447,10 @@ This plan details the migration of the InvenioRDM codebase from React 16.13.0 to
 
 ### 1.3 Scope
 
+- **Ecosystem Packages** (MUST be migrated first):
+  - react-overridable (Blocker 0 - max supported React 17)
+  - react-searchkit (Blocker 1 - depends on react-overridable)
+  - react-invenio-forms (Blocker 2 - depends on react-overridable)
 - **Custom Code**: Local repository (`assets/js/`)
 - **Core Packages**: invenio-rdm-records, invenio-app-rdm, invenio-communities, invenio-administration, invenio-search-ui
 - **Supporting Packages**: ~18 additional oarepo forks
@@ -368,7 +469,20 @@ This plan details the migration of the InvenioRDM codebase from React 16.13.0 to
 
 ## 2. Codebase Analysis
 
-### 2.1 React Codebase Scope
+### 2.1 Ecosystem Package Blockers
+
+| Package | Current Version | React Support | Status | Blocking | Priority |
+|---------|-----------------|---------------|--------|----------|----------|
+| **react-overridable** | 1.2.0 | 16-17 | ✅ PR exists | 🔴 YES | 0 (CRITICAL) |
+| **react-searchkit** | 4.0.0 | 16 | 🟡 In Progress | 🟡 YES | 1 |
+| **react-invenio-forms** | 4.0.0 | 16 | ⚪ Not Started | 🟡 YES | 2 |
+
+**Blocking Analysis**:
+- `react-overridable` v1.2.0 peerDep: `react: ">=16.14.0"` (effectively max 17 based on PR #14)
+- Cannot install React 19 while any package depends on react-overridable ^1.x
+- Must upgrade to react-overridable v2.0.0 first, then update dependent packages
+
+### 2.2 React Codebase Scope
 
 | Package | Location | JS Files | Lines | Source |
 |---------|----------|----------|-------|--------|
@@ -382,13 +496,13 @@ This plan details the migration of the InvenioRDM codebase from React 16.13.0 to
 
 **Total**: ~1,300+ React files, ~93,000+ lines of React code
 
-### 2.2 Current Build Tool
+### 2.3 Current Build Tool
 
 - **Tool**: Rspack 1.0+
 - **Status**: Already supports React 19
 - **Action**: Verify configuration after migration
 
-### 2.3 Node.js and Package Manager Requirements
+### 2.4 Node.js and Package Manager Requirements
 
 **CRITICAL**: Always use Node v22 and pnpm for JavaScript dependencies. Never use npm.
 
@@ -1782,15 +1896,17 @@ React 19's `useFormState` is NOT used for InvenioRDM deposit forms because:
 
 | # | Package | Fork Exists? | Lines | Priority | Eligible Components | Special Notes |
 |---|---------|--------------|-------|----------|---------------------|--------------|
-| 1 | Local custom code | N/A | ~358 | 1 | TBA | Simple test case |
-| 2 | invenio-rdm-records | ✓ | ~35,582 | 1 | ~50+ | Includes Formik v2.4.9 + Redux, Uppy 5.0 hooks, React Router v7 |
-| 3 | invenio-app-rdm | ✓ | ~12,297 | 2 | TBA | Check Formik/Upee usage |
-| 4 | invenio-communities | ✓ | ~10,212 | 3 | TBA | Check Uppy usage |
-| 5 | invenio-administration | ✓ | ~3,014 | 3 | TBA | React Router v7 needed |
-| 6 | invenio-search-ui | ✓ | ~1,446 | 4 | TBA | React Router v7 needed |
-| 7 | react-invenio-forms | TBD | TBD | **Required** | - | Check fork, ask if missing |
-| 8 | docs-invenio-rdm | ✓ | - | **Required** | N/A | Docs only |
-| 9-24 | Remaining forks | TBD | ~30,000+ | 5 | TBA | Check each for Formik/Uppy/Router |
+| 0 | react-overridable | TBD | ~200 | **Critical** | All | BLOCKER 0: max React 17 PR #14, needs React 19 support |
+| 1 | react-searchkit | ✓ | ~1,500 | **Critical** | All | BLOCKER 1: tests done, PR #212 needs React 19 |
+| 2 | react-invenio-forms | TBD | TBD | **Critical** | All | BLOCKER 2: depends on react-overridable v2 |
+| 3 | docs-invenio-rdm | ✓ | - | **Critical** | N/A | Docs only |
+| 4 | Local custom code | N/A | ~358 | 1 | TBA | Simple test case |
+| 5 | invenio-rdm-records | ✓ | ~35,582 | 1 | ~50+ | Includes Formik v2.4.9 + Redux, Uppy 5.0 hooks, React Router v7 |
+| 6 | invenio-app-rdm | ✓ | ~12,297 | 2 | TBA | Check Formik/Upee usage |
+| 7 | invenio-communities | ✓ | ~10,212 | 3 | TBA | Check Uppy usage |
+| 8 | invenio-administration | ✓ | ~3,014 | 3 | TBA | React Router v7 needed |
+| 9 | invenio-search-ui | ✓ | ~1,446 | 4 | TBA | React Router v7 needed |
+| 10-25 | Remaining forks | TBD | ~30,000+ | 5 | TBA | Check each for Formik/Uppy/Router |
 
 ### 12.2 Creation Steps
 
@@ -1801,16 +1917,24 @@ React 19's `useFormState` is NOT used for InvenioRDM deposit forms because:
 5. **Execute full migration** per package in priority order
 6. **Update docs-invenio-rdm** with new patterns
 
-### 12.3 Expected Timeline
+### 12.3 Expected Timeline (Updated for Ecosystem Blockers)
 
+**Phase -1: Ecosystem Packages Migration (Blocker Clearance)**
+- **react-overridable**: 2-3 days (fork, tests, peerDep update, React 19 support) **- BLOCKER 0**
+- **react-searchkit**: 3-4 days (update dependency, React 19 migration) **- BLOCKER 1** (already started)
+- **react-invenio-forms**: 3-4 days (fork, tests, React 19 migration) **- BLOCKER 2**
+- **Ecosystem Phase Subtotal**: 8-11 days (must complete first)
+
+**Phase 0+: Tooling and Infrastructure**
 - **Tooling creation**: 3-4 days (includes Uppy 5.0 hooks, React Router v7 templates)
+
+**Phase 1: Application Migration**
 - **Custom code migration**: 1 day
 - **invenio-rdm-records migration**: 13-17 days (largest package, ~50+ components, Formik v2.4.9 + Redux, Uppy 5.0 hooks, React Router v7)
 - **Other packages**: 6-8 days each
 - **Documentation updates**: 5-6 days (concurrent, Formik+Redux, Uppy 5.0, React Router v7 patterns)
-- **react-invenio-forms**: 3-4 days (if fork available)
 
-**Total estimated**: 40-55 days
+**Total estimated**: 36-45 days (8-11 days for ecosystem + 28-34 days for application)
 
 ---
 
